@@ -33,47 +33,57 @@ var mantras = [
 var affirmationBtn = document.querySelector('.affirmation');
 var mantraBtn = document.querySelector('.mantra');
 var receiveMessageBtn = document.querySelector('.receive-message');
-var meditationImage = document.querySelector('svg');
+var meditationImage = document.querySelector('img');
 var messageReturn = document.querySelector('h3');
-var randomAffirmation = affirmations[getRandomIndex(affirmations)];
-var randomMantra = mantras[getRandomIndex(mantras)];
+var randomAffirmation;
+var randomMantra;
 var deleteMessageBtn = document.querySelector('.delete-message')
 
 
-receiveMessageBtn.addEventListener('click', displayMessage);
+receiveMessageBtn.addEventListener('click', receiveMessage);
 deleteMessageBtn.addEventListener('click', deleteMessage)
 
 function getRandomIndex(array) {
   return Math.floor(Math.random() * array.length);
 }
 
-function displayMessage() {
-  if (affirmationBtn.checked === true || mantraBtn.checked === true) {
+function changeScreenDisplay() {
+  if (affirmationBtn.checked || mantraBtn.checked) {
     meditationImage.classList.add('hidden');
     messageReturn.classList.remove('hidden');
     deleteMessageBtn.classList.remove('hidden');
   }
-  if (affirmationBtn.checked === true) {
+}
+
+function receiveMessage() {
+  randomAffirmation = affirmations[getRandomIndex(affirmations)];
+  randomMantra = mantras[getRandomIndex(mantras)]
+  changeScreenDisplay();
+  if (affirmationBtn.checked) {
     messageReturn.innerText = randomAffirmation;
-  } else if (mantraBtn.checked === true) {
+  } else if (mantraBtn.checked) {
     messageReturn.innerText = randomMantra;
   }
 }
 
+function arrayIteration(array) {
+  for (var i = 0; i < array.length; i++) {
+    if (array[i] === messageReturn.innerText) {
+      array.splice(i, 1);
+    }
+  }
+}
+
+function alertMessage(type) {
+  alert(`You won't see this ${type} again!`)
+}
+
 function deleteMessage() {
-  if (affirmationBtn.checked === true) {
-    for (var i = 0; i < affirmations.length; i++) {
-      if (affirmations[i] === randomAffirmation) {
-        affirmations.splice(i, 1);
-        alert("You won't see this affirmation again!");
-      }
-    }
-  } else if (mantraBtn.checked === true) {
-    for (var i = 0; i < mantras.length; i++) {
-      if (mantras[i] === randomMantra) {
-        mantras.splice(i, 1);
-        alert("You won't see this mantra again!");
-      }
-    }
+  if (affirmationBtn.checked) {
+    arrayIteration(affirmations);
+    alertMessage("affirmation");
+  } else if (mantraBtn.checked) {
+    arrayIteration(mantras);
+    alertMessage("mantra");
   }
 }
